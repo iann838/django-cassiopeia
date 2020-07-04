@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
+import datetime
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -37,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_cassiopeia',
 ]
 
 MIDDLEWARE = [
@@ -99,6 +101,137 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+
+# Example django cache config
+CACHE = {
+    # Leave the "default" cache for handling data for your apps (preferable)
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/10", #db:10 for test
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    }
+
+    # Example cache for cass using "django-redis" (pip install)
+    # For this backend you can define the pickle protocol version, default -1 (latest)
+    # Check Out "django-redis" repository/docs for lot more flexible configurations.
+    "cass-redis": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/11", #db:11 for test
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            "PICKLE_VERSION": -1
+        }
+    }
+    # Example cache using FileBased backend that stores a max of 10k values
+    'filebased': {
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION': os.path.join(BASE_DIR, 'filebased-cache'),
+        'MAX_ENTRIES': 10000,
+    }
+    # For more caching backends and/or configurations
+    # Please check Django's cache framework documentation.
+}
+
+CASSIOPEIA_GLOBAL = {
+    "version_from_match": "patch",
+    "default_region": "NA"
+}
+CASSIOPEIA_LOGGING = {  #used for printing status to console in development
+    "print_calls": True,
+    "print_riot_api_key": False,
+    "default": "WARNING",
+    "core": "WARNING"
+}
+CASSIOPEIA_RIOT_API = {
+    "api_key": os.environ["RIOT_API_KEY"],
+    "limiting_share": 1.0,
+}
+CASSIOPEIA_RIOT_API_ERROR_HANDLING = {
+    "404": {
+        "strategy": "throw"
+    },
+    "429": {
+        "service": {
+            "strategy": "exponential_backoff",
+            "initial_backoff": 3.0,
+            "backoff_factor": 2.0,
+            "max_attempts": 3
+        },
+        "method": {
+            "strategy": "retry_from_headers",
+            "max_attempts": 5
+        },
+        "application": {
+            "strategy": "retry_from_headers",
+            "max_attempts": 5
+        }
+    },
+    "500": {
+        "strategy": "exponential_backoff",
+        "initial_backoff": 3.0,
+        "backoff_factor": 2.0,
+        "max_attempts": 3
+    },
+    "503": {
+        "strategy": "exponential_backoff",
+        "initial_backoff": 3.0,
+        "backoff_factor": 2.0,
+        "max_attempts": 3
+    },
+    "timeout": {
+        "strategy": "exponential_backoff",
+        "initial_backoff": 3.0,
+        "backoff_factor": 2.0,
+        "max_attempts": 3
+    },
+    "403": {
+        "strategy": "throw"
+    }
+}
+CASSIOPEIA_PIPELINE = {
+    "Cache" : {
+        "expirations-map" : {
+            datetime.timedelta(minutes=5): ["*"],
+        }
+    },
+    "DDragon": {},
+}
+CASSIOPEIA_DJANGO_CACHE = [
+    "cass-redis": {
+        "expirations-map" : {
+            datetime.timedelta(hours=6): [
+                "rl-", "v-", "cr-", "cm-", "cm+-", "cl-", "gl-", "ml-"
+            ],
+            datetime.timedelta(days=7): [
+                "mp-", "mp+-", "ls-", "ls+-", "t-"
+            ],
+            datetime.timedelta(minutes=15): [
+                "cg-", "fg-", "shs-", "s-"
+            ],
+            datetime.timedelta(days=1): [
+                "*"
+            ]
+        }
+    }
+]
+
+
+
+CASS_SETTINGS =  {
+    "global": {
+        "version_from_match": "patch",
+        "default_region": "NA"
+    },
+    "pipeline": 
+    "logging": {
+        "print_calls": True,
+        "print_riot_api_key": False,
+        "default": "WARNING",
+        "core": "WARNING"
+    }
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
