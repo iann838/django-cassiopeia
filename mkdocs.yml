@@ -1,10 +1,15 @@
 site_name: Django Cassiopeia
+
 nav:
   - Home: index.md
   - Django Setup: django-setup.md
   - Avoids and DON'Ts:  cautions.md
   - Quick Starts: examples.md
-  - Support and Contrib: supports.md 
-theme: readthedocs
+  - Support and Contrib: supports.md
 
-extra_css: [css/prevent-burning-your-eyes.css]
+theme:
+  name: readthedocs
+  titles_only: True
+  custom_dir: docs_custom/
+
+extra_css: [prevent-burning-your-eyes.css]

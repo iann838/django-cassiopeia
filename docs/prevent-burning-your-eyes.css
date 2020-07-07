@@ -13,12 +13,12 @@ a:visited {
 }
 
 pre {
-	background-color: #2d2d2d; !important;
+	background-color: #2d2d2d !important;
 }
 
 .wy-nav-content {
-	background: #3c3c3c;
-	color: aliceblue;
+	background: rgb(23, 25, 26);
+    color: rgb(161, 215, 255);
 }
 
 .method dt, .class dt, .data dt, .attribute dt, .function dt,
@@ -31,9 +31,16 @@ pre {
 	color: grey !important;
 }
 
-code.literal {
+.rst-content pre code {
 	background-color: #2d2d2d !important;
 	border: 1px solid #6d6d6d !important;
+	color: lightblue;
+}
+
+code {
+	background-color: #2d2d2d !important;
+	border: 1px solid #6d6d6d !important;
+	color: lightblue;
 }
 
 .wy-nav-content-wrap {
@@ -58,7 +65,33 @@ code.literal {
 
 .wy-side-nav-search {
 	background-color: inherit;
-	border-bottom: 1px solid #fcfcfc;
+	border-bottom: 1px solid rgb(49, 53, 55);
+}
+
+.wy-side-nav-search input[type="text"] {
+    border-top-color: rgb(35, 111, 160);
+    border-right-color: rgb(35, 111, 160);
+    border-bottom-color: rgb(35, 111, 160);
+	border-left-color: rgb(35, 111, 160);
+	box-shadow: none !important;
+}
+
+input {
+	background-color: #181a1b;
+}
+
+.wy-nav-side {
+    color: rgb(169, 161, 150);
+    background-image: initial;
+    background-color: rgb(30, 33, 34);
+}
+
+.wy-menu-vertical li.toctree-l1.current > a {
+    border-bottom-color: rgb(63, 69, 71);
+	border-top-color: rgb(63, 69, 71);
+	color: rgb(192, 186, 178);
+    background-image: initial;
+    background-color: rgb(26, 28, 29);
 }
 
 .wy-table thead, .rst-content table.docutils thead, .rst-content table.field-list thead {
@@ -99,4 +132,9 @@ li.toctree-l1 {
 
 .wy-menu-vertical .xref {
     color: #2980B9 !important;
+}
+
+.wy-body-for-nav {
+    background-image: initial;
+    background-color: rgb(26, 28, 29);
 }

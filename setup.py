@@ -11,7 +11,9 @@ install_requires = [
     "Pillow",
     "arrow",
     "requests",
-    "Django>=2.2.0"
+    "Django>=2.2.0",
+    "cassiopeia_championgg",
+    "cassiopeia_diskstore"
 ]
 
 # Require python 3.6

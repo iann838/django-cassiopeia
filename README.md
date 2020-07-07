@@ -1,5 +1,7 @@
 [![MIT Licensed](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/paaksing/django-cassiopeia/blob/master/LICENSE.txt)
-[![Documentation Status](https://readthedocs.org/projects/cassiopeia/badge/?version=latest)](https://django-cassiopeia.readthedocs.io/en/latest/)
+[![Documentation Status](https://readthedocs.org/projects/django-cassiopeia/badge/?version=latest)](https://django-cassiopeia.readthedocs.io/en/latest/?badge=latest)
+[![GitHub issues](https://img.shields.io/github/issues/Naereen/StrapDown.js.svg)](https://github.com/paaksing/django-cassiopeia/issues)
+
 
 # Django Cassiopeia
 
