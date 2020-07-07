@@ -101,13 +101,13 @@ CASSIOPEIA_LOGGING = {
 * Define how cassiopeia handles when a non-200 status code is generated.
 * This settings might be shorten for future release (taking too much space in `settings.py`)
 #### Arguments:
-* Any valid none-200 code, below arguments is for non-429s:
+###### Any valid none-200 code, below arguments is for non-429s:
 1. `strategy` : strategy used to handle can be of [`throw`, `exponential_backoff`, `retry_from_headers`].
 2. `initial_backoff`: Unique for `exponential_backoff`, the initial time to hang a call.
 3. `backoff_factor`: Unique for `exponential_backoff`, the factor to be multiplied to `initial_backoff` (exponencially) for each failed attempt.
 4. `max_attempts`: Amount of time to retry, ignored by `throw`.
 5. `retry_from_headers`: Retries from `"Retry-After"` value returned on response header, only for uses in 429s 
-* For 429 specific:
+###### For 429 specific:
 1. `service`: raised when an internal server limit has hit (this cannot be predicted, is a general rate limit from riot's end), applies all above arguments.
 2. `method`: raised when you hit method specific rate limit, applies all above arguments.
 3. `application`: raised when you hit per region rate limit, and applies all above arguments.
@@ -161,7 +161,8 @@ CASSIOPEIA_RIOT_API_ERROR_HANDLING = {
 * If you want to use others Datastores for cassiopeia (such as the standard `Cache` or the plugin `SimpleKVDiskStore`), define it to the proper order on the pipeline settings, and pass any arguments such as `expirations`/`expirations-map`, `package`, etc.
 * For in deep information about how the pipeline works, check out cassiopeia docs on pipelines: https://cassiopeia.readthedocs.io/en/latest/datapipeline.html
 #### Arguments:
-* 
+1. The name of the datastore, valid keys: `["Cache", "DjangoCache", "DDragon", "RiotAPI", "SimpleKVDiskStore", "ChampionGG", ...]`
+2. And any values that the datastore needs.
 ```python
 CASSIOPEIA_PIPELINE = {
     "DjangoCache" : {},  #look at django's cache first
@@ -172,7 +173,6 @@ CASSIOPEIA_PIPELINE = {
 
 ### Define the all the Django caches that is used for cassiopeia:
 * Define the django's caches that would be used for caching cassiopeia data.
-* 
 #### Arguments: 
 1. `alias`: name of the cache defined in `CACHES`.
 2. `logs-enabled`: enables logs of every event (PUT,GET) from and to django's caches (Recommended for testing.). 

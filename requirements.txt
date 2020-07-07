@@ -1,0 +1,11 @@
+Django>=2.2.0
+flake8
+pytest
+merakicommons>=1.0.7
+datapipelines>=1.0.7
+Pillow
+arrow
+requests
+cassiopeia_championgg
+cassiopeia_diskstore
+cassiopeia_sqlstore

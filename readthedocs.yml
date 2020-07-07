@@ -1,11 +1,14 @@
 version: 2
 
 mkdocs:
-    configuration: mkdocs.yml
+  configuration: mkdocs.yml
+  fail_on_warning: false
 
 python:
     version: 3.6
     install:
+        - requirements: requirements.txt
         - method: pip
-
-extra_css: [css/prevent-burning-your-eyes.css]
+            path: .
+            extra_requirements:
+                - docs
