@@ -1,6 +1,5 @@
 [![MIT Licensed](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/paaksing/django-cassiopeia/blob/master/LICENSE.txt)
-[![Documentation Status](https://readthedocs.org/projects/cassiopeia/badge/?version=latest)](http://cassiopeia.readthedocs.org/en/latest/)
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.1170906.svg)](https://doi.org/10.5281/zenodo.1170906)
+[![Documentation Status](https://readthedocs.org/projects/cassiopeia/badge/?version=latest)](https://django-cassiopeia.readthedocs.io/en/latest/)
 
 # Django Cassiopeia
 
@@ -8,8 +7,9 @@ An Integration of [Cassiopeia](https://github.com/meraki-analytics/cassiopeia) t
 
 Cassiopeia itself is a Python adaptation of the Riot Games League of Legends API (https://developer.riotgames.com/). For instance it is also the sister library to [Orianna](https://github.com/robrua/Orianna) (Java). It's been designed with usability in mind - making sure all the bookkeeping is done right so you can focus on getting the data you need and building your application.
 
-## Cassiopeia specific Documentation
-Cassiopeia has detailed [documentation](http://cassiopeia.readthedocs.org/en/latest/).
+## Documentation
+Django Cassiopeia has detailed [documentation](https://django-cassiopeia.readthedocs.io/en/latest/).
+For functions and methods of Cassiopeia is found is this [documentation](http://cassiopeia.readthedocs.org/en/latest/) 
 
 ## Installation and Requirements
 ```python
@@ -55,7 +55,7 @@ pip install django-cassiopeia
 * There is a caveat when using Django's cache over the Standard cache that Cassiopeia provides: It cannot cache `cassiopeia.core` objects due to the fact of its `key` not being of type `string` or a `picklable` object, so it rather caches `cassiopeia.dto` objects which then automatically be transform to `cassiopeia.core`. The time consumption difference is super minimal `cassiopeia.dto` needs some 20ms more than `cassiopeia.core`, but `cassiopeia.core` takes a lot more memory (at least 5 times more if you use compressors on your Django's cache).
 
 ## Questions/Contributions/Bugs
-* For Django Cassiopeia: Feel free to send pull requests or to contact us via this github or our general [discord](https://discord.gg/uYW7qhP). More information can be found in our [documentation](http://cassiopeia.readthedocs.org/en/latest/).
+* For Django Cassiopeia: Feel free to send pull requests or to contact us via this github or our general [discord](https://discord.gg/uYW7qhP). More information can be found in our [documentation](https://django-cassiopeia.readthedocs.io/en/latest/).
 * For Cassiopeia: feel free to send pull requests or to contact cassiopeia devs via [cassiopeia's github](https://github.com/meraki-analytics/cassiopeia) or the same discord server. More information about main cassiopeia is found in this [documentation](http://cassiopeia.readthedocs.org/en/latest/).
 
 ## Citing Cassiopeia (Quoting from cassiopeia repository)
