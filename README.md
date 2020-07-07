@@ -52,7 +52,7 @@ pip install django-cassiopeia
 
 * The "Perfect" rate limiting does not actually work here .. since a Web Framework can behave in a variety of process flow: multi-process, async, conj. (see Existing Problems below).
 
-* The Settings interface is adapted to a syntax that is compatible (visually) with Django Settings (see Setup for Django environment below).
+* The Settings interface is adapted to a syntax that is compatible (visually) with Django Settings (see Setup for Django environment in documentations).
 
 ## Existing Problems (minor ?) and Plans
 
