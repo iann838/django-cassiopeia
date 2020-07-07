@@ -61,7 +61,7 @@ pip install django-cassiopeia
 
 ## Trade-offs
 
-* There is a caveat when using Django's cache over the Standard cache that Cassiopeia provides: It cannot cache `cassiopeia.core` objects due to the fact of its `key` not being of type `string` or a `picklable` object, so it rather caches `cassiopeia.dto` objects which then automatically be transform to `cassiopeia.core`. The time consumption difference is super minimal `cassiopeia.dto` needs some 20ms more than `cassiopeia.core`, but `cassiopeia.core` takes a lot more memory (at least 5 times more if you use compressors on your Django's cache).
+* There is a caveat when using Django's cache over the Standard cache that Cassiopeia provides: It cannot cache `cassiopeia.core` objects due to the fact of its `key` not being of type `string` or a `picklable` object, so it rather caches `cassiopeia.dto` objects which then automatically be transform to `cassiopeia.core`. The time consumption difference is super minimal `cassiopeia.dto` needs some 20ms more than `cassiopeia.core`, but this is considered this is a good trade-off because `cassiopeia.core` takes a lot more memory (at least 5 times more if you use compressors on your Django's cache) compared to `cassiopeia.dto`.
 
 ## Questions/Contributions/Bugs
 * For Django Cassiopeia: Feel free to send pull requests or to contact us via this github or our general [discord](https://discord.gg/uYW7qhP). More information can be found in our [documentation](https://django-cassiopeia.readthedocs.io/en/latest/).
