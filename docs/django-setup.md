@@ -263,7 +263,7 @@ CASSIOPEIA_DJANGO_CACHES = [
         "expirations_imap": {
             td(days=1): ["c-", "c+-", "r-", "r+-", "i-", "i+-", "ss-", "ss+-", "pi-", "pi+-", "p-"],
             0: ["*-"]
-        }
+        },
         "logs_enabled": True,
     }
 ]
