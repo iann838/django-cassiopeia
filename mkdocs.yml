@@ -9,7 +9,7 @@ nav:
 
 theme:
   name: readthedocs
-  titles_only: True
+  titles_only: true
   custom_dir: docs_custom/
 
 extra_css: [prevent-burning-your-eyes.css]
