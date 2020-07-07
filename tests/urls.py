@@ -15,7 +15,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+import django_cassiopeia.views as test_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', test_view.test),
+    path('test/<int:n>', test_view.test_request)
 ]

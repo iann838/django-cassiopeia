@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
-import datetime
+from datetime import timedelta as td
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -103,7 +103,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 
 # Example django cache config
-CACHE = {
+CACHES = {
     # Leave the "default" cache for handling data for your apps (preferable)
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
@@ -111,7 +111,7 @@ CACHE = {
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         }
-    }
+    },
 
     # Example cache for cass using "django-redis" (pip install)
     # For this backend you can define the pickle protocol version, default -1 (latest)
@@ -123,7 +123,7 @@ CACHE = {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
             "PICKLE_VERSION": -1
         }
-    }
+    },
     # Example cache using FileBased backend that stores a max of 10k values
     'filebased': {
         'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
@@ -134,19 +134,17 @@ CACHE = {
     # Please check Django's cache framework documentation.
 }
 
+RIOT_API_KEY = os.environ["RIOT_API_KEY"]
+CASSIOPEIA_LIMITING_SHARE = 1.0
 CASSIOPEIA_GLOBAL = {
     "version_from_match": "patch",
     "default_region": "NA"
 }
-CASSIOPEIA_LOGGING = {  #used for printing status to console in development
+CASSIOPEIA_LOGGING = {
     "print_calls": True,
     "print_riot_api_key": False,
     "default": "WARNING",
     "core": "WARNING"
-}
-CASSIOPEIA_RIOT_API = {
-    "api_key": os.environ["RIOT_API_KEY"],
-    "limiting_share": 1.0,
 }
 CASSIOPEIA_RIOT_API_ERROR_HANDLING = {
     "404": {
@@ -190,48 +188,31 @@ CASSIOPEIA_RIOT_API_ERROR_HANDLING = {
         "strategy": "throw"
     }
 }
-CASSIOPEIA_PIPELINE = {
-    "Cache" : {
+CASSIOPEIA_DJANGO_CACHES = [
+    {
+        "alias" : "cass-redis",
         "expirations-map" : {
-            datetime.timedelta(minutes=5): ["*"],
+            td(hours=6): ["rl-", "v-", "cr-", "cm-", "cm+-", "cl-", "gl-", "ml-"],
+            td(days=7): ["mp-", "mp+-", "ls-", "ls+-", "t-", 'm-'],
+            td(minutes=15): ["cg-", "fg-", "shs-", "s-"],
+            td(seconds=60): ["m+-"],
+            0: ["*-"]
         }
     },
-    "DDragon": {},
-}
-CASSIOPEIA_DJANGO_CACHE = [
-    "cass-redis": {
-        "expirations-map" : {
-            datetime.timedelta(hours=6): [
-                "rl-", "v-", "cr-", "cm-", "cm+-", "cl-", "gl-", "ml-"
-            ],
-            datetime.timedelta(days=7): [
-                "mp-", "mp+-", "ls-", "ls+-", "t-"
-            ],
-            datetime.timedelta(minutes=15): [
-                "cg-", "fg-", "shs-", "s-"
-            ],
-            datetime.timedelta(days=1): [
-                "*"
-            ]
+    {
+        "alias": "filebased",
+        "expirations-map": {
+            td(days=1): ["c-", "c+-", "r-", "r+-", "i-", "i+-", "ss-", "ss+-", "pi-", "pi+-", "p-"],
+            0: ["*-"]
         }
     }
 ]
-
-
-
-CASS_SETTINGS =  {
-    "global": {
-        "version_from_match": "patch",
-        "default_region": "NA"
-    },
-    "pipeline": 
-    "logging": {
-        "print_calls": True,
-        "print_riot_api_key": False,
-        "default": "WARNING",
-        "core": "WARNING"
-    }
+CASSIOPEIA_PIPELINE = {
+    "DjangoCache" : {},
+    "DDragon": {},
+    "RiotAPI": {},
 }
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/

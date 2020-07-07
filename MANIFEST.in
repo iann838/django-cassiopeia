@@ -1,0 +1,5 @@
+include _cassiopeia/_configuration/default.json
+include _cassiopeia/_configuration/all_plugins.json
+include _cassiopeia/profile_icon_names.json
+include _cassiopeia/transformers/*.py
+include _cassiopeia/patches.json
