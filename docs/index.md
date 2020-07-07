@@ -14,7 +14,7 @@ For functions and methods of Cassiopeia is found is this [documentation](http://
 
 ## Installation and Requirements
 ```python
-Django>=2.2.0
+Django>=3.0.1
 Python>=3.6
 
 pip install django-cassiopeia
