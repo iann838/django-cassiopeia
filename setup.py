@@ -12,8 +12,6 @@ install_requires = [
     "arrow",
     "requests",
     "Django>=2.2.0",
-    "cassiopeia_championgg",
-    "cassiopeia_diskstore"
 ]
 
 # Require python 3.6
@@ -25,7 +23,7 @@ setup(
     version="1.0.0", 
     author="Paaksing",
     author_email="paaksingtech@gmail.com",
-    url="https://github.com/meraki-analytics/cassiopeia",
+    url="https://github.com/paaksing/django-cassiopeia",
     description="Django Integration of the Riot Games Developer API Wrapper 'cassiopeia'",
     keywords=["Django", "LoL", "League of Legends", "Riot Games", "API", "REST"],
     classifiers=[
