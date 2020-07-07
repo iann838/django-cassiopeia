@@ -3,6 +3,11 @@
 import sys
 
 from setuptools import setup, find_packages
+from os import path
+
+this_directory = path.abspath(path.dirname(__file__))
+with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
+    long_description = f.read()
 
 
 install_requires = [
@@ -11,7 +16,8 @@ install_requires = [
     "Pillow",
     "arrow",
     "requests",
-    "Django>=2.2.0",
+    "Django>=3.0.1",
+    "wheel",
 ]
 
 # Require python 3.6
@@ -25,10 +31,12 @@ setup(
     author_email="paaksingtech@gmail.com",
     url="https://github.com/paaksing/django-cassiopeia",
     description="Django Integration of the Riot Games Developer API Wrapper 'cassiopeia'",
+    long_description=long_description,
+    long_description_content_type='text/markdown',
     keywords=["Django", "LoL", "League of Legends", "Riot Games", "API", "REST"],
     classifiers=[
-        "Development Status :: 1 - Beta",
-        "Programming Language :: Python :: 3",
+        "Development Status :: 4 - Beta",
+        "Programming Language :: Python :: 3.6",
         "Environment :: Web Environment",
         "Operating System :: OS Independent",
         "Intended Audience :: Developers",
@@ -37,9 +45,11 @@ setup(
         "Topic :: Games/Entertainment :: Real Time Strategy",
         "Topic :: Games/Entertainment :: Role-Playing",
         "Topic :: Software Development :: Libraries :: Python Modules",
+        "Natural Language :: English",
+        "Framework :: Django :: 3.0",
     ],
     license="MIT",
-    packages=find_packages(),
+    packages=find_packages(exclude=("tests",)),
     zip_safe=True,
     install_requires=install_requires,
     include_package_data=True
