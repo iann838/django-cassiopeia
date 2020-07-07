@@ -7,3 +7,5 @@ python:
     version: 3.6
     install:
         - method: pip
+
+extra_css: [css/prevent-burning-your-eyes.css]

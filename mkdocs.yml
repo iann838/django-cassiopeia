@@ -6,4 +6,3 @@ nav:
   - Quick Starts: examples.md
   - Support and Contrib: supports.md 
 theme: readthedocs
-extra_css: [css/prevent-burning-your-eyes.css]

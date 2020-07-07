@@ -48,6 +48,7 @@ pip install django-cassiopeia
 ## Existing Problems (minor ?) and Plans
 
 * The current rate limiter is the same used in cassiopeia, so is rather a "Do not black list me" rate limiter (which is what the Riot Team recommends), but we (both cass and django-cass devs) prefer to not get as much 429s, a rate limiter that fits (or may fits) to Django is under going research.
+* Django's Cache cannot cache `Champion.gg` data yet .. in a very very short time will be updated the support.
 
 ## Trade-offs
 
