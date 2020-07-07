@@ -191,20 +191,22 @@ CASSIOPEIA_RIOT_API_ERROR_HANDLING = {
 CASSIOPEIA_DJANGO_CACHES = [
     {
         "alias" : "cass-redis",
-        "expirations-map" : {
+        "expirations_map" : {
             td(hours=6): ["rl-", "v-", "cr-", "cm-", "cm+-", "cl-", "gl-", "ml-"],
             td(days=7): ["mp-", "mp+-", "ls-", "ls+-", "t-", 'm-'],
             td(minutes=15): ["cg-", "fg-", "shs-", "s-"],
             td(seconds=60): ["m+-"],
             0: ["*-"]
-        }
+        },
+        "logs_enabled": True,
     },
     {
         "alias": "filebased",
-        "expirations-map": {
+        "expirations_map": {
             td(days=1): ["c-", "c+-", "r-", "r+-", "i-", "i+-", "ss-", "ss+-", "pi-", "pi+-", "p-"],
             0: ["*-"]
-        }
+        },
+        "logs_enabled": True,
     }
 ]
 CASSIOPEIA_PIPELINE = {
