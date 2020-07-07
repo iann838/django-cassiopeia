@@ -243,6 +243,7 @@ CASSIOPEIA_PIPELINE = {
     "*+": "*+"
     "**": "**"
 ```
+5. Please remember that Django's cache cannot cache objects of type `cassiopeia.core`, so you only be able to set for objects `cassiopeia.dto`, a brief talk about this trade-off (certainly good) is talked on the repository's README or the homepage of this documentation.
 ```python
 # Example CASSIOPEIA_DJANGO_CACHES
 # Here we imported `datatime.timedelta` as `td` to make it short as possible
