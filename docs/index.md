@@ -34,25 +34,25 @@ pip install django-cassiopeia
 
 * Dynamic settings so you can configure Cass for your specific use case.
 
-## Features Integration and Fixed Problems
+## Features Integration and Fixed Issues
 
-* __Issue:__ Cassiopeia current caching system does not automatically (or regularly) expire objects on expirations which might cause severe memory issues when working with web frameworks if it goes out of your control.__Solution:__ This integration will give you the ability to use Django's cache framework for your caching, which is full production tested.
+* **_Issue:_** Cassiopeia current caching system does not automatically (or regularly) expire objects on expirations which might cause severe memory issues when working with web frameworks if it goes out of your control. **_Solution:_** This integration will give you the ability to use Django's cache framework for your caching, which is full production tested.
 
-* __Issue:__ The variety of cache backends that Cass provides may not fit your needs when paired with Django. __Solution:__ Now you can use ANY cache backends of your like that the Django's cache framework supports: Django-Redis, python-Memcached, pylibmc, Filebased, MySQL, Postgre, SQLite, ... (Check out [Django's cache framework official docs](https://docs.djangoproject.com/en/dev/topics/cache/) for more). Also ! You can configure it to have more than 1 cache, the ability to separate multiple objects to different caching system. 
+* **_Issue:_** The variety of cache backends that Cass provides may not fit your needs when paired with Django. **_Solution:_** Now you can use ANY cache backends of your like that the Django's cache framework supports: Django-Redis, python-Memcached, pylibmc, Filebased, MySQL, Postgre, SQLite, ... (Check out [Django's cache framework official docs](https://docs.djangoproject.com/en/dev/topics/cache/) for more). Also ! You can configure it to have more than 1 cache, the ability to separate multiple objects to different caching system. 
 
-* __Issue:__ When not imported Cassiopeia correctly within the Django environment, each time you call a function that uses cass will create a new instance of it and killing all existing Ghost modules (for information of Cassiopeia's Ghost(Lazy) loading check out its [documentations](http://cassiopeia.readthedocs.org/en/latest/)), creating conflicts that might crash your server.__Solution:__ Django Cassiopeia is an app, which you add it through the `INSTALLED_APPS` settings which automatically loads the adapted version of Cassiopeia.
+* **_Issue:_** When not imported Cassiopeia correctly within the Django environment, each time you call a function that uses cass will create a new instance of it and killing all existing Ghost modules (for information of Cassiopeia's Ghost(Lazy) loading check out its [documentations](http://cassiopeia.readthedocs.org/en/latest/)), creating conflicts that might crash your server. **_Solution:_** Django Cassiopeia is an app, which you add it through the `INSTALLED_APPS` settings which automatically loads the adapted version of Cassiopeia.
 
-* __Issue:__ Cassiopeia's settings code block is too large compared to others Django settings. __Solution:__ The Settings interface is adapted to a syntax that is compatible (visually) with Django Settings (see Setup for Django environment in documentations).
+* **_Issue:_** Cassiopeia's settings code block is too large compared to others Django settings. **_Solution:_** The Settings interface is adapted to a syntax that is compatible (visually) with Django Settings (see Setup for Django environment in documentations).
 
-* __Issue:__ When cassiopeia is paired with a web framework (e.g. Django, Flask), the "Perfect" rate limiting is not totally "Perfect" __(it STILL WORKS, just not as atomic as in a single process environment, AKA normal python scripts without Multi-threading/processing modules)__, since a Web Framework can behave in a variety of process flow: multi-process, async, conj. (see Existing Problems below).
+* **_Issue:_** When cassiopeia is paired with a web framework (e.g. Django, Flask), the "Perfect" rate limiting is not totally "Perfect" **_(it STILL WORKS, just not as atomic as in a single process environment, AKA normal python scripts without Multi-threading/processing modules)_**, since a Web Framework can behave in a variety of process flow: multi-process, async, conj. (see Existing Problems below).
 
 ## Existing and Future Plans.
 
-* The current rate limiter is the SAME used in `cassiopeia`, so is rather a "Do not black list me" rate limiter __(it holds calls for the time returned in retry-after header when an unexpected 429 is returned, which is what the Riot Team recommends)__, but we (both cass and django-cass devs) prefer to not get a single 429 (at least in rare cases), a rate limiter that fits (or may fits) to Django is under going research. _See the **Project** tab if you want to contribute for this, if compatible, we will consider porting it over to the main cassiopeia._
+* The current rate limiter is the SAME used in `cassiopeia`, so is rather a "Do not black list me" rate limiter **_(it holds calls for the time returned in retry-after header when an unexpected 429 is returned, which is what the Riot Team recommends)_**, but we (both cass and django-cass devs) prefer to not get a single 429 (at least in rare cases), a rate limiter that fits (or may fits) to Django is under going research. _See the **Project** tab if you want to contribute for this, if compatible, we will consider porting it over to the main cassiopeia._
 
 * Django's Cache cannot cache `Champion.gg` data yet .. in a very very short time will be updated the support. _I currently don't feel the need, the support is good to go by just adding some 50 lines of codes, fire me an issue if you need it._
 
-* __If you want any new feature for Django Cassiopeia__, fire me a Feature Request and I will try to give you a response, I have some thoughts about replacing ddragon's champion json files with meraki's json files, or have an additional object for that. 
+* **_If you want any new feature for Django Cassiopeia_**, fire me a Feature Request and I will try to give you a response, I have some thoughts about replacing ddragon's champion json files with meraki's json files, or have an additional object for that.
 
 ## Trade-offs
 
