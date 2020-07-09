@@ -48,7 +48,7 @@ pip install django-cassiopeia
 
 ## Existing and Future Plans.
 
-* The current rate limiter is the SAME used in `cassiopeia`, so is rather a "Do not black list me" rate limiter **_(it holds calls for the time returned in retry-after header when an unexpected 429 is returned, which is what the Riot Team recommends)_**, but we (both cass and django-cass devs) prefer to not get a single 429 (at least in rare cases), a rate limiter that fits (or may fits) to Django is under going research. _See the **Project** tab if you want to contribute for this, if compatible, we will consider porting it over to the main cassiopeia._
+* The current rate limiter is the SAME used in `cassiopeia`, so is rather a "Do not black list me" rate limiter **_(it holds calls for the time returned in retry-after header when an unexpected 429 is returned, which is what the Riot Team recommends)_**, but we (both cass and django-cass devs) prefer to not get a single 429 (or only in extreme cases), a rate limiter that fits (or may fits) to Django is under going research. _See the **Project** tab if you want to contribute for this, if compatible, we will consider porting it over to the main cassiopeia._
 
 * Django's Cache cannot cache `Champion.gg` data yet .. in a very very short time will be updated the support. _I currently don't feel the need, the support is good to go by just adding some 50 lines of codes, fire me an issue if you need it._
 
@@ -56,7 +56,7 @@ pip install django-cassiopeia
 
 ## Trade-offs
 
-* There is a caveat when using Django's cache over the Standard cache that Cassiopeia provides: It cannot cache `cassiopeia.core` objects due to the fact of its `key` not being of type `string` or a `picklable` object, so it rather caches `cassiopeia.dto` objects which then automatically be transform to `cassiopeia.core`. The time consumption difference is super minimal `cassiopeia.dto` needs some 20ms more than `cassiopeia.core`, but this is considered this is a good trade-off because `cassiopeia.core` takes a lot more memory (at least 5 times more if you use compressors on your Django's cache) compared to `cassiopeia.dto`.
+* There is a minor caveat when using Django's cache over the Standard cache that Cassiopeia provides: It cannot cache `cassiopeia.core` objects due to the fact of its `key` not being of type `string` or a `picklable` object, so it rather caches `cassiopeia.dto` objects which then automatically be transform to `cassiopeia.core`. The time consumption difference is super minimal `cassiopeia.dto` needs some 20ms more than `cassiopeia.core`, **_but this is considered this is a good trade-off because `cassiopeia.core` takes a lot more memory (at least 5 times more if you use compressors on your Django's cache) compared to `cassiopeia.dto`._**
 
 ## Questions/Contributions/Bugs
 * For Django Cassiopeia: Feel free to send pull requests or to contact us via this github or our general [discord](https://discord.gg/uYW7qhP). More information can be found in our [documentation](https://django-cassiopeia.readthedocs.io/en/latest/).
