@@ -11,7 +11,8 @@ Cassiopeia itself is a Python adaptation of the Riot Games League of Legends API
 
 ## Documentation
 Django Cassiopeia has detailed [documentation](https://django-cassiopeia.readthedocs.io/en/latest/).
-For functions and methods of Cassiopeia is found is this [documentation](http://cassiopeia.readthedocs.org/en/latest/) 
+For functions and methods of Cassiopeia is found is this [documentation](http://cassiopeia.readthedocs.org/en/latest/).
+A changelog of the last 10 releases is at the bottom of this page.
 
 ## Installation and Requirements
 ```python
@@ -81,3 +82,12 @@ If you used Cassiopeia for your research, please [cite the project](https://doi.
 Django Cassiopeia existence is acknowleged by cassiopeia's former developers. Both package/framework/library is updated in parallel with some exceptions due to the fact of different use cases.
 
 Cassiopeia/Django-Cassiopeia isn't endorsed by Riot Games and doesn't reflect the views or opinions of Riot Games or anyone officially involved in producing or managing League of Legends. League of Legends and Riot Games are trademarks or registered trademarks of Riot Games, Inc. League of Legends © Riot Games, Inc.
+
+## Change Log
+
+### 1.1.0
+* Shorten the Django settings for handling Riot API request errors (in a 1:3 ratio), check out the [documentation](https://django-cassiopeia.readthedocs.io/en/latest/django-setup/) for its new syntax (Ctrl F5 to clean reload in case your brower loads the cached page).
+* Moved out the entire setting mapping logic to a separate file for better maintainance, mainly `_cassiopeia.settings.py -> django_cassiopeia.utils.py`.
+
+### 1.0.0
+* First Release of Django Cassiopeia

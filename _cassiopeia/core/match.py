@@ -266,7 +266,7 @@ class MatchData(CoreData):
 ##############
 
 
-class MatchHistory(CassiopeiaLazyList):  # type: List[Match]
+class MatchHistory(CassiopeiaLazyList):
     """The match history for a summoner. By default, this will return the entire match history."""
     _data_types = {MatchListData}
 

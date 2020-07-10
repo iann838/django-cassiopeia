@@ -146,47 +146,24 @@ CASSIOPEIA_LOGGING = {
     "default": "WARNING",
     "core": "WARNING"
 }
-CASSIOPEIA_RIOT_API_ERROR_HANDLING = {
-    "404": {
-        "strategy": "throw"
-    },
+CASSIOPEIA_API_ERROR_HANDLING = {
+    # 404 with strategy "throw"
+    "404": ["t"],
+
+    # 500 with strategy "exponential_backoff"
+    # initial_backoff of 3 seconds 
+    # backoff_factor of 2
+    # max_attempts of 3 times 
+    "500": ["^e", 3, 2, 3],
+
+    "503": ["^e", 3, 2, 3],
+    "timeout": ["^e", 3, 2, 3],
+    "403": ["t"],
     "429": {
-        "service": {
-            "strategy": "exponential_backoff",
-            "initial_backoff": 3.0,
-            "backoff_factor": 2.0,
-            "max_attempts": 3
-        },
-        "method": {
-            "strategy": "retry_from_headers",
-            "max_attempts": 5
-        },
-        "application": {
-            "strategy": "retry_from_headers",
-            "max_attempts": 5
-        }
+        "service": ["^e", 3, 2, 3],
+        "method": ["r", 5],
+        "application": ["r", 5],
     },
-    "500": {
-        "strategy": "exponential_backoff",
-        "initial_backoff": 3.0,
-        "backoff_factor": 2.0,
-        "max_attempts": 3
-    },
-    "503": {
-        "strategy": "exponential_backoff",
-        "initial_backoff": 3.0,
-        "backoff_factor": 2.0,
-        "max_attempts": 3
-    },
-    "timeout": {
-        "strategy": "exponential_backoff",
-        "initial_backoff": 3.0,
-        "backoff_factor": 2.0,
-        "max_attempts": 3
-    },
-    "403": {
-        "strategy": "throw"
-    }
 }
 CASSIOPEIA_DJANGO_CACHES = [
     {
@@ -195,7 +172,6 @@ CASSIOPEIA_DJANGO_CACHES = [
             td(hours=6): ["rl-", "v-", "cr-", "cm-", "cm+-", "cl-", "gl-", "ml-"],
             td(days=7): ["mp-", "mp+-", "ls-", "ls+-", "t-", 'm-'],
             td(minutes=15): ["cg-", "fg-", "shs-", "s-"],
-            td(seconds=60): ["m+-"],
             0: ["*-"]
         },
         "logs_enabled": True,

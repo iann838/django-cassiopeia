@@ -99,61 +99,60 @@ CASSIOPEIA_LOGGING = {
 ```
 ### Define the handle system for your api calls:
 * Define how cassiopeia handles when a non-200 status code is generated.
-* This settings might be shorten for future release (taking too much space in `settings.py`)
+#### New in Django Cassiopeia 1.1.0
+* This setting is the shorten version defined in original `cassiopeia` (because it is taking too much space in `settings.py`).
+* Please read carefully the below arguments for better understanding, for more information you can reference cassiopeia's documentation.
 #### Arguments:
-###### Any valid none-200 code, below arguments is for non-429s:
-1. `strategy` : strategy used to handle can be of [`throw`, `exponential_backoff`, `retry_from_headers`].
-2. `initial_backoff`: Unique for `exponential_backoff`, the initial time to hang a call.
-3. `backoff_factor`: Unique for `exponential_backoff`, the factor to be multiplied to `initial_backoff` (exponencially) for each failed attempt.
-4. `max_attempts`: Amount of time to retry, ignored by `throw`.
-5. `retry_from_headers`: Retries from `"Retry-After"` value returned on response header, only for uses in 429s 
-###### For 429 specific:
-1. `service`: raised when an internal server limit has hit (this cannot be predicted, is a general rate limit from riot's end), applies all above arguments.
-2. `method`: raised when you hit method specific rate limit, applies all above arguments.
-3. `application`: raised when you hit per region rate limit, and applies all above arguments.
+1. Status code in `str` (valid codes: 404, 500, 503, timeout, 403, 429): List of sub-arguments, this list takes a maximum of 4 arguments, being the `[0]` the strategy abbr, `[1]..[3]` the additional arguments that the strategy takes (such as `exponential_backoff` will have `initial_backoff`, `backoff_factor` and `max_attempts`). The entire list of arguments and abbr is after the example.
+2. For status code 429, an additional dict needs to be passed: `service`: raised when an internal server limit has hit (this cannot be predicted, is a general rate limit from riot's end), applies all above arguments. `method`: raised when you hit method specific rate limit, applies all above arguments. `application`: raised when you hit per region rate limit, and applies all above arguments.
 ```python
-CASSIOPEIA_RIOT_API_ERROR_HANDLING = {
-    "404": {
-        "strategy": "throw"
-    },
+# see below list of abbr for better understanding
+CASSIOPEIA_API_ERROR_HANDLING = {
+    # 404 with strategy "throw"
+    "404": ["t"],
+
+    # 500 with strategy "exponential_backoff"
+    # initial_backoff of 3 seconds 
+    # backoff_factor of 2
+    # max_attempts of 3 times 
+    "500": ["^e", 3, 2, 3],
+
+    "503": ["^e", 3, 2, 3],
+    "timeout": ["^e", 3, 2, 3],
+    "403": ["t"],
+
+    # 429 has 3 different types of handling: see above #2 argument
     "429": {
-        "service": {
-            "strategy": "exponential_backoff",
-            "initial_backoff": 3.0,
-            "backoff_factor": 2.0,
-            "max_attempts": 3
-        },
-        "method": {
-            "strategy": "retry_from_headers",
-            "max_attempts": 5
-        },
-        "application": {
-            "strategy": "retry_from_headers",
-            "max_attempts": 5
-        }
+        "service": ["^e", 3, 2, 3],
+
+        # 429 in method limiter with strategy "retry_from_headers"
+        # max_attempts of 5 times 
+        "method": ["r", 5],
+
+        "application": ["r", 5],
     },
-    "500": {
-        "strategy": "exponential_backoff",
-        "initial_backoff": 3.0,
-        "backoff_factor": 2.0,
-        "max_attempts": 3
-    },
-    "503": {
-        "strategy": "exponential_backoff",
-        "initial_backoff": 3.0,
-        "backoff_factor": 2.0,
-        "max_attempts": 3
-    },
-    "timeout": {
-        "strategy": "exponential_backoff",
-        "initial_backoff": 3.0,
-        "backoff_factor": 2.0,
-        "max_attempts": 3
-    },
-    "403": {
-        "strategy": "throw"
-    }
 }
+```
+#### List of abbr for error handling
+1. `strategy` : Strategy used to handle, can be of [`throw`, `exponential_backoff`, `retry_from_headers`].
+2. `initial_backoff`: The initial time to hang a call.
+3. `backoff_factor`: The factor to be multiplied to `initial_backoff` (exponencially) for each failed attempt.
+4. `max_attempts`: Amount of time to retry.
+5. `retry_from_headers`: Retries from value returned by `"Retry-After"` header. 
+```python
+    "t": {
+        "strategy": "throw"
+    },
+    "^e": {
+        "strategy": "exponential_backoff",
+        1 : "initial_backoff",
+        2 : "backoff_factor",
+        3 : "max_attempts",
+    },
+    "r": {
+        "strategy": "retry_from_headers",
+        1 : "max_attempts",
+    }
 ```
 
 ### IMPORTANT: Define the pipeline used for cassiopeia:
@@ -177,9 +176,38 @@ CASSIOPEIA_PIPELINE = {
 1. `alias`: name of the cache defined in `CACHES`.
 2. `logs-enabled`: enables logs of every event (PUT,GET) from and to django's caches (Recommended for testing.). 
 3. `expirations`: defines the amount of time for each cassiopeia object for each cache, each pair of key-values should be in the form of `cassiopeia obj as str : datetime.timedelta obj`. This is a significant long list considering when you use multiple cache for this, `expiration-map` is a shorter version of this (see next argument). 
-4. `expirations-map`: a mapping for the standard `expirations` argument, it takes a dictionary of type `datetime.timedelta obj : List[str]`, the strings inside the List is an abbr for each of the objects that cassiopeia has, normally it takes the inicials of the object's name, a `+` at the end means it contains a group (e.g. `Item` and `Items`), a `-` at the end means it is of type `dto`, `+-` at the end means it is a `dto` that contains a group, `**` for all the remaining objects, `*+` means all the remaining `core` objects, and `*-` for all the remaining `dto` objects. REMINDER: There are some exceptions with objects that has same inicials (e.g. `Realms`(`rl`) and `Rune`(`r`)). The full list of abbr is here:
+4. `expirations-map`: a mapping for the standard `expirations` argument, it takes a dictionary of type `datetime.timedelta obj : List[str]`, the strings inside the List is an abbr for each of the objects that cassiopeia has, normally it takes the inicials of the object's name, a `+` at the end means it contains a group (e.g. `Item` and `Items`), a `-` at the end means it is of type `dto`, `+-` at the end means it is a `dto` that contains a group, `**` for all the remaining objects, `*+` means all the remaining `core` objects, and `*-` for all the remaining `dto` objects. REMINDER: There are some exceptions with objects that has same inicials (e.g. `Realms`(`rl`) and `Rune`(`r`)). The full list of objects abbr is after the example.
+5. Please remember that Django's cache cannot cache objects of type `cassiopeia.core`, so you only be able to set for objects `cassiopeia.dto`, a brief talk about this trade-off (certainly good) is talked on the repository's README or the homepage of this documentation.
 ```python
-# List of abbrs
+# Example CASSIOPEIA_DJANGO_CACHES
+from datetime import timedelta as td
+# ...
+# At the top of your settings.py import `datatime.timedelta` as `td` to make it short as possible
+
+CASSIOPEIA_DJANGO_CACHES = [
+    {
+        "alias" : "cass-redis",
+        "expirations_map" : {
+            td(hours=6): ["rl-", "v-", "cr-", "cm-", "cm+-", "cl-", "gl-", "ml-"],
+            td(days=7): ["mp-", "mp+-", "ls-", "ls+-", "t-", 'm-'],
+            td(minutes=15): ["cg-", "fg-", "shs-", "s-"],
+            0: ["*-"]
+        },
+        "logs_enabled": True,
+    },
+    {
+        "alias": "filebased",
+        "expirations_imap": {
+            td(days=1): ["c-", "c+-", "r-", "r+-", "i-", "i+-", "ss-", "ss+-", "pi-", "pi+-", "p-"],
+            0: ["*-"]
+        },
+        "logs_enabled": True,
+    }
+]
+```
+#### List of abbr for cassiopeia objects
+* Known missing abbr: `MatchListDto` is missing, this is TOTALLY intentional because the `totalGames` attribute in Riot's end is broken/bugged, IT STILL WORKS, just can't cache for now (_I feel MatchList doesn't need cache at all, since those are constantly updated and garbaging after using, BUT if you need it, fire me an issue for that._)
+```python
     "cr":"ChampionRotationData"
     "rl":"Realms"
     "v":"Versions"
@@ -239,32 +267,7 @@ CASSIOPEIA_PIPELINE = {
     "cg-":"CurrentGameInfoDto"
     "fg-":"FeaturedGamesDto"
     "p-":"PatchListDto"
-    "*-": "*-"
-    "*+": "*+"
-    "**": "**"
-```
-5. Please remember that Django's cache cannot cache objects of type `cassiopeia.core`, so you only be able to set for objects `cassiopeia.dto`, a brief talk about this trade-off (certainly good) is talked on the repository's README or the homepage of this documentation.
-```python
-# Example CASSIOPEIA_DJANGO_CACHES
-# Here we imported `datatime.timedelta` as `td` to make it short as possible
-CASSIOPEIA_DJANGO_CACHES = [
-    {
-        "alias" : "cass-redis",
-        "expirations_map" : {
-            td(hours=6): ["rl-", "v-", "cr-", "cm-", "cm+-", "cl-", "gl-", "ml-"],
-            td(days=7): ["mp-", "mp+-", "ls-", "ls+-", "t-", 'm-'],
-            td(minutes=15): ["cg-", "fg-", "shs-", "s-"],
-            0: ["*-"]
-        },
-        "logs_enabled": True,
-    },
-    {
-        "alias": "filebased",
-        "expirations_imap": {
-            td(days=1): ["c-", "c+-", "r-", "r+-", "i-", "i+-", "ss-", "ss+-", "pi-", "pi+-", "p-"],
-            0: ["*-"]
-        },
-        "logs_enabled": True,
-    }
-]
+    "*-": "Remaining of all dto objects"
+    "*+": "Remaining of all core objects"
+    "**": "Remaining of all objects"
 ```

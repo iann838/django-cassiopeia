@@ -12,98 +12,6 @@ T = TypeVar("T")
 
 logging.basicConfig(format='%(asctime)s: %(message)s', datefmt='%Y-%m-%d %H:%M:%S', level=logging.WARNING)
 
-expire_index = {
-    "cr":"ChampionRotationData",
-    "rl":"Realms",
-    "v":"Versions",
-    "c":"Champion",
-    "c+":"Champions",
-    "r":"Rune",
-    "r+":"Runes",
-    "i":"Item",
-    "i+":"Items",
-    "ss":"SummonerSpell",
-    "ss+":"SummonerSpells",
-    "mp":"Map",
-    "mp+":"Maps",
-    "pi":"ProfileIcon",
-    "pi+":"ProfileIcons",
-    "ls":"Locales",
-    "ls+":"LanguageStrings",
-    "cm":"ChampionMastery",
-    "cm+":"ChampionMasteries",
-    "lse":"LeagueSummonerEntries",
-    "l":"League",
-    "cl":"ChallengerLeague",
-    "gl":"GrandmasterLeague",
-    "ml":"MasterLeague",
-    "m":"Match",
-    "t":"Timeline",
-    "s":"Summoner",
-    "shs":"ShardStatus",
-    "cg":"CurrentMatch",
-    "fg":"FeaturedMatches",
-    "rl-":"RealmDto",
-    "v-":"VersionListDto",
-    "c-":"ChampionDto",
-    "c+-":"ChampionListDto",
-    "r-":"RuneDto",
-    "r+-":"RuneListDto",
-    "i-":"ItemDto",
-    "i+-":"ItemListDto",
-    "ss-":"SummonerSpellDto",
-    "ss+-":"SummonerSpellListDto",
-    "mp-":"MapDto",
-    "mp+-":"MapListDto",
-    "pi-":"ProfileIconDetailsDto",
-    "pi+-":"ProfileIconDataDto",
-    "ls-":"LanguagesDto",
-    "ls+-":"LanguageStringsDto",
-    "cr-":"ChampionRotationDto",
-    "cm-":"ChampionMasteryDto",
-    "cm+-":"ChampionMasteryListDto",
-    "cl-":"ChallengerLeagueListDto",
-    "gl-":"GrandmasterLeagueListDto",
-    "ml-":"MasterLeagueListDto",
-    "m-":"MatchDto",
-    "t-":"TimelineDto",
-    "s-":"SummonerDto",
-    "shs-":"ShardStatusDto",
-    "cg-":"CurrentGameInfoDto",
-    "fg-":"FeaturedGamesDto",
-    "p-":"PatchListDto",
-    "*-": "*-",
-    "*+": "*+",
-    "**": "**"
-}
-
-def create_expiration(mape) -> Mapping[type, dict]:
-    expirations = {}
-    last = False
-    for time, types in mape.items():
-        if last:
-            raise AttributeError("key of type '*' is assigned but not last of object 'expirations_map'")
-        for typ in types:
-            if typ[0] == "*" and typ[-1] in ["*","-","+"] and len(typ) == 2:
-                for mapkey, mapobj in expire_index.items():
-                    key_to_add = None
-                    if typ == "*-" and mapobj not in expirations.keys() and mapobj.endswith('Dto'):
-                        key_to_add = mapobj
-                    elif typ == "*+" and mapobj not in expirations.keys() and not mapobj.endswith('Dto'):
-                        key_to_add = mapobj
-                    elif typ == "**":
-                        key_to_add = mapobj
-                    if key_to_add is not None and key_to_add not in ["**","*-","*+"]:
-                        expirations[mapobj] = time
-                last = True
-            elif expire_index[typ] not in expirations.keys():
-                    expirations[expire_index[typ]] = time
-            else:
-                if typ[0] == "*":
-                    raise KeyError("'"+typ+"' in object 'expirations_map'")
-                raise AttributeError("Attempted duplicate key '"+typ+"' in object 'expirations_map'")
-    return expirations
-
 def create_pipeline(service_configs: Dict, verbose: int = 0) -> DataPipeline:
     transformers = []
 
@@ -122,12 +30,8 @@ def create_pipeline(service_configs: Dict, verbose: int = 0) -> DataPipeline:
         store_cls = getattr(module, store_name)
         if store_name.lower() == "djangocache":
             for cache_config in config:
-                if "expirations_map" in cache_config.keys():
-                    cache_config["expirations"] = create_expiration(cache_config.pop("expirations_map"))
                 services.append(store_cls(**cache_config))
         else:
-            if "expirations_map" in config.keys():
-                config["expirations"] = create_expiration(config.pop("expirations_map"))
             store = store_cls(**config)
             services.append(store)
             service_transformers = getattr(module, "__transformers__", [])
