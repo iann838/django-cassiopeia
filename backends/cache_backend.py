@@ -10,7 +10,7 @@ LOGGER = getLogger(__name__)
 T = TypeVar("T")
 
 class DjangoCacheBackend(object):
-    def __init__(self, alias: str = None, logs_enabled: bool = True) -> None:
+    def __init__(self, alias: str = None, logs_enabled: bool = False) -> None:
         self._alias = alias
         self._cache = caches[alias]
         self._logs_enabled = logs_enabled
@@ -21,7 +21,7 @@ class DjangoCacheBackend(object):
                 timeout = None
             self._cache.set(key, value, timeout)
             if self._logs_enabled:
-                LOGGER.warn(f"[Traceback: django_cassiopeia > {self._alias}] PUT: {key}")
+                LOGGER.warn(f"[Trace: django_cassiopeia > {self._alias}] PUT: {key}")
 
     def put_many(self, pairs: Any, timeout: int = -1) -> None:
         if timeout != 0:
@@ -29,14 +29,14 @@ class DjangoCacheBackend(object):
                 timeout = None
             self._cache.set_many(pairs, timeout)
             if self._logs_enabled:
-                LOGGER.warn(f"[Traceback: django_cassiopeia > {self._alias}] PUT-MANY: {[key for key in pairs.keys()]}")
+                LOGGER.warn(f"[Trace: django_cassiopeia > {self._alias}] PUT-MANY: {[key for key in pairs.keys()]}")
 
     def get(self, key: Any) -> Any:
         item = self._cache.get(key)
         if item is None:
             raise KeyError
         if self._logs_enabled:
-            LOGGER.warn(f"[Traceback: django_cassiopeia > {self._alias}] GET: {key}")
+            LOGGER.warn(f"[Trace: django_cassiopeia > {self._alias}] GET: {key}")
         return item
 
     # This varies from the cache backend you use, might implement

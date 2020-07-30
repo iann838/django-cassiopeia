@@ -153,8 +153,8 @@ def get_version(date: datetime.date = None, region: Union[Region, str] = None) -
     return None
 
 
-def get_verification_string(summoner: Summoner) -> VerificationString:
-    return VerificationString(summoner=summoner)
+def get_verification_string(summoner: Summoner, region: Union[Region, str] = None) -> VerificationString:
+    return VerificationString(summoner=summoner, region=region)
 
 
 def get_champion_rotations(region: Union[Region, str] = None) -> ChampionRotation:

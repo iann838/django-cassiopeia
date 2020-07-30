@@ -6,3 +6,4 @@ from .ghost import UnloadedGhostStore
 from .merakianalyticscdn import MerakiAnalyticsCDN
 from .lolwikia import LolWikia
 from .django_cache import DjangoCache
+from .omnistone import Omnistone

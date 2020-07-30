@@ -26,7 +26,7 @@ if sys.version_info.major != 3 and sys.version_info.minor != 6:
 
 setup(
     name="django-cassiopeia",
-    version="1.1.0", 
+    version="2.0.0", 
     author="Paaksing",
     author_email="paaksingtech@gmail.com",
     url="https://github.com/paaksing/django-cassiopeia",

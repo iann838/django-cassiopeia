@@ -85,13 +85,34 @@ error_handler_map = {
     }
 }
 
+default_logging = {
+    "print_calls": True,
+    "print_riot_api_key": False,
+    "default": "WARNING",
+    "core": "WARNING"
+}
+
+default_error = {
+    "404": ["t"],
+    "500": ["^e", 3, 2, 3],
+    "503": ["^e", 3, 2, 3],
+    "TIMEOUT": ["^e", 3, 2, 3],
+    "403": ["t"],
+    "429": {
+        "SERVICE": ["^e", 3, 2, 3],
+        "METHOD": ["r", 5],
+        "APPLICATION": ["r", 5],
+    },
+}
 
 def create_expiration(mape) -> Mapping[type, dict]:
+    if mape is None:
+        return None
     expirations = {}
     last = False
     for time, types in mape.items():
         if last:
-            raise AttributeError("key of type '*' is assigned but not last of object 'expirations_map'")
+            raise AttributeError("key of type '*' is assigned but not last of object 'EXPIRATIONS_MAP'")
         for typ in types:
             if typ[0] == "*" and typ[-1] in ["*","-","+"] and len(typ) == 2:
                 for mapkey, mapobj in expire_index.items():
@@ -109,20 +130,22 @@ def create_expiration(mape) -> Mapping[type, dict]:
                     expirations[expire_index[typ]] = time
             else:
                 if typ[0] == "*":
-                    raise KeyError("'"+typ+"' in object 'expirations_map'")
-                raise AttributeError("Attempted duplicate key '"+typ+"' in object 'expirations_map'")
+                    raise KeyError("'"+typ+"' in object 'EXPIRATIONS_MAP'")
+                raise AttributeError("Attempted duplicate key '"+typ+"' in object 'EXPIRATIONS_MAP'")
     return expirations
 
 
 def create_handler(mape) -> Mapping[type, type]:
     handler = {}
     for code, values in mape.items():
+        code = code.lower()
         if code not in handler.keys():
             handler[code]= {}
         else:
-            raise KeyError("Attempted duplicate key '"+code+"' in object 'riotapi_request_error_handling'")
+            raise KeyError("Attempted duplicate key '"+code+"' in object 'CASSIOPEIA_API_ERROR_HANDLER'")
         if code == "429":
             for limit_type, inner_values in values.items():
+                limit_type = limit_type.lower()
                 strategy = error_handler_map[inner_values[0]]
                 handler[code][limit_type] = {}
                 for ind in range(len(inner_values)):
@@ -139,39 +162,47 @@ def create_handler(mape) -> Mapping[type, type]:
                     handler[code][strategy[ind]] = values[ind]
     return handler
 
+def try_pop(obj, key):
+    try:
+        return obj.pop(key)
+    except:
+        return None
 
-def get_cass_settings():
-    cass = {
-        "global" : getattr(settings, "CASSIOPEIA_GLOBAL", None),
-        "pipeline" : getattr(settings, "CASSIOPEIA_PIPELINE", None),
-        "logging" : getattr(settings, "CASSIOPEIA_LOGGING", None),
-        "plugins": getattr(settings, "CASSIOPEIA_PLUGINS", None)
+
+def cassiopeia_init():
+    cass_global = {
+        "version_from_match": getattr(settings, "CASSIOPEIA_VERSION_FROM_MATCH", "patch"),
+        "default_region" : getattr(settings, "CASSIOPEIA_DEFAULT_REGION", "NA")
     }
-    for key, config in copy.deepcopy(cass).items():
-        if key == "pipeline" and config is None:
-            raise AttributeError("'pipeline' settings in django-cassiopeia is obligatory")
-        elif config is None:
-            LOGGER.warning(f"[Traceback: django-cassiopeia > settings] WARNING: '{key}' is not set, using default settings")
-            del cass[key]
-    for store_name, config in copy.deepcopy(cass["pipeline"]).items():
-        if store_name == "DjangoCache":
-            cass["pipeline"][store_name] = settings.CASSIOPEIA_DJANGO_CACHES
-        elif store_name == "RiotAPI":
-            cass["pipeline"][store_name]["api_key"] = settings.RIOT_API_KEY
-            cass["pipeline"][store_name]["limiting_share"] = settings.CASSIOPEIA_LIMITING_SHARE
-            try:
-                handler = settings.CASSIOPEIA_API_ERROR_HANDLING
-                cass["pipeline"][store_name]["request_error_handling"] = create_handler(handler)
-            except AttributeError:
-                LOGGER.warning("[Traceback: django-cassiopeia > settings] Warning: 'riotapi_request_error_handling' is not set, using default settings")
-                LOGGER.warning("[Traceback: django-cassiopeia > settings] Warning: 'riotapi_request_error_handling' has changed its syntax since version 1.1.0."+
-                    "No longer accepts 'CASSIOPEIA_RIOT_API_ERROR_HANDLING', a shorter version is replaced on 'CASSIOPEIA_API_ERROR_HANDLING', see documentation.")
-    for store_name, config in copy.deepcopy(cass["pipeline"]).items():
+    cass_logging = getattr(settings, "CASSIOPEIA_LOGGING", default_logging)
+    cass_pipeline = {}
+    settings_pipeline = getattr(settings, "CASSIOPEIA_PIPELINE", None)
+    if settings_pipeline is None:
+        raise AttributeError("'CASSIOPEIA_PIPELINE' settings in django-cassiopeia is obligatory")
+    settings_pipeline["RiotAPI"] = {
+        "api_key" : settings.CASSIOPEIA_RIOT_API_KEY,
+        "limiting_share": getattr(settings,'CASSIOPEIA_LIMITING_SHARE', 1.0),
+        "request_error_handling" : create_handler(getattr(settings,'CASSIOPEIA_API_ERROR_HANDLING', default_error)),
+    }
+    for store_name, config in settings_pipeline.items():
         if store_name.lower() == "djangocache":
-            for ind in range(len(config)):
-                if "expirations_map" in config[ind].keys():
-                    cass["pipeline"][store_name][ind]["expirations"] = create_expiration(cass["pipeline"][store_name][ind].pop("expirations_map"))
+            cass_pipeline[store_name] = []
+            for cache in config:
+                if "EXPIRATIONS_MAP" in cache.keys():
+                    cache["EXPIRATIONS"] = create_expiration(try_pop(cache, "EXPIRATIONS_MAP"))
+                cache = {key.lower():item for (key, item) in cache.items()}
+                cass_pipeline[store_name].append(cache)
         else:
-            if "expirations_map" in config.keys():
-                cass["pipeline"][store_name]["expirations"] = create_expiration(cass["pipeline"][store_name].pop("expirations_map"))
-    return cass
+            cass_pipeline[store_name] = {}
+            if "EXPIRATIONS_MAP" in config.keys():
+                settings_pipeline[store_name]["EXPIRATIONS"] = create_expiration(try_pop(config, "EXPIRATIONS_MAP"))
+            cass_pipeline[store_name] = {key.lower():item for (key, item) in settings_pipeline[store_name].items()}
+    cassiopeia_settings = {
+        "global" : cass_global,
+        "pipeline" : cass_pipeline,
+        "logging" : {k.lower():v for k,v in cass_logging.items()},
+        "plugins": getattr(settings, "CASSIOPEIA_PLUGINS", {})
+    }
+    return cassiopeia_settings
+    
+    

@@ -21,7 +21,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 't@=gsf6km5gpctq@v(mipqp$ay!4&4^raocl3n40zjx46&&7#3'
+SECRET_KEY = os.environ["DJANGO_CASSIOPEIA_SECRET"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -134,59 +134,64 @@ CACHES = {
     # Please check Django's cache framework documentation.
 }
 
-RIOT_API_KEY = os.environ["RIOT_API_KEY"]
+CASSIOPEIA_DEFAULT_REGION = "NA"
+CASSIOPEIA_RIOT_API_KEY = os.environ["RIOT_API_KEY"]
 CASSIOPEIA_LIMITING_SHARE = 1.0
-CASSIOPEIA_GLOBAL = {
-    "version_from_match": "patch",
-    "default_region": "NA"
-}
+
 CASSIOPEIA_LOGGING = {
-    "print_calls": True,
-    "print_riot_api_key": False,
-    "default": "WARNING",
-    "core": "WARNING"
+    "PRINT_CALLS": True,
+    # Do not set below value to True in production !!!
+    "PRINT_RIOT_API_KEY": False,
+    "DEFAULT": "WARNING",
+    "CORE": "WARNING"
 }
 CASSIOPEIA_API_ERROR_HANDLING = {
-    # 404 with strategy "throw"
     "404": ["t"],
-
-    # 500 with strategy "exponential_backoff"
-    # initial_backoff of 3 seconds 
-    # backoff_factor of 2
-    # max_attempts of 3 times 
     "500": ["^e", 3, 2, 3],
-
     "503": ["^e", 3, 2, 3],
-    "timeout": ["^e", 3, 2, 3],
+    "TIMEOUT": ["^e", 3, 2, 3],
     "403": ["t"],
     "429": {
-        "service": ["^e", 3, 2, 3],
-        "method": ["r", 5],
-        "application": ["r", 5],
+        "SERVICE": ["^e", 3, 2, 3],
+        "METHOD": ["r", 5],
+        "APPLICATION": ["r", 5],
     },
 }
-CASSIOPEIA_DJANGO_CACHES = [
-    {
-        "alias" : "cass-redis",
-        "expirations_map" : {
-            td(hours=6): ["rl-", "v-", "cr-", "cm-", "cm+-", "cl-", "gl-", "ml-"],
-            td(days=7): ["mp-", "mp+-", "ls-", "ls+-", "t-", 'm-'],
-            td(minutes=15): ["cg-", "fg-", "shs-", "s-"],
-            0: ["*-"]
-        },
-        "logs_enabled": True,
-    },
-    {
-        "alias": "filebased",
-        "expirations_map": {
-            td(days=1): ["c-", "c+-", "r-", "r+-", "i-", "i+-", "ss-", "ss+-", "pi-", "pi+-", "p-"],
-            0: ["*-"]
-        },
-        "logs_enabled": True,
-    }
-]
 CASSIOPEIA_PIPELINE = {
-    "DjangoCache" : {},
+    "Omnistone": {
+        "EXPIRATIONS_MAP" : {
+            td(hours=3): ["c", "c+", "r", "r+", "cr", "i", "i+", "pi", "pi+"],
+            td(hours=6): ["rl", "v", "ss", "ss+", "mp", "mp+", "ls", "ls+"],
+            0: ["*+"]
+        },
+        "MAX_ENTRIES": 6000,
+        "CULL_FRECUENCY": 2,
+        "SAFE_CHECK": True,
+        "LOGS_ENABLED": False,
+    },
+    "DjangoCache": [
+        {
+            "ALIAS" : "cass-redis",
+            "EXPIRATIONS_MAP" : {
+                td(hours=6): ["rl-", "v-", "cr-", "cm-", "cm+-", "cl-", "gl-", "ml-"],
+                td(days=7): ["mp-", "mp+-", "ls-", "ls+-", "t-", 'm-'],
+                td(days=1): ["c-", "c+-", "r-", "r+-", "i-", "i+-", "ss-", "ss+-", "pi-", "pi+-", "p-"],
+                td(minutes=15): ["cg-", "fg-", "shs-", "s-"],
+                0: ["*-"]
+            },
+            "SAFE_CHECK": True,
+            "LOGS_ENABLED": True,
+        },
+        {
+            "ALIAS": "filebased",
+            "EXPIRATIONS_MAP": {
+                td(days=1): ["c-", "c+-", "r-", "r+-", "i-", "i+-", "ss-", "ss+-", "pi-", "pi+-", "p-"],
+                0: ["*-"]
+            },
+            "SAFE_CHECK": True,
+            "LOGS_ENABLED": True,
+        }
+    ],
     "DDragon": {},
     "RiotAPI": {},
 }

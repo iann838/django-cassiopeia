@@ -37,7 +37,7 @@ def create_pipeline(service_configs: Dict, verbose: int = 0) -> DataPipeline:
             service_transformers = getattr(module, "__transformers__", [])
             transformers.extend(service_transformers)
 
-    from ..datastores import Cache, MerakiAnalyticsCDN, LolWikia
+    from ..datastores import Cache, Omnistone, MerakiAnalyticsCDN, LolWikia
 
     # Automatically insert the ghost store if it isn't there
     from ..datastores import UnloadedGhostStore
@@ -47,15 +47,13 @@ def create_pipeline(service_configs: Dict, verbose: int = 0) -> DataPipeline:
             found = True
             break
     if not found:
-        if any(isinstance(service, Cache) for service in services):
-            # Find the cache and insert the ghost store directly after it
-            for i, datastore in enumerate(services):
-                if isinstance(datastore, Cache):
-                    services.insert(i+1, UnloadedGhostStore())
-                    break
-        else:
-            # Insert the ghost store at the beginning of the pipeline
-            services.insert(0, UnloadedGhostStore())
+        # Find the cache and insert the ghost store directly after it
+        # OR Insert the ghost store at the beginning of the pipeline
+        j = 0
+        for i, datastore in enumerate(services):
+            if isinstance(datastore, Cache) or isinstance(datastore, Omnistone):
+                j = i+1 if i+1 > j else j
+        services.insert(j, UnloadedGhostStore())
 
     services.append(MerakiAnalyticsCDN())
     services.append(LolWikia())

@@ -1,16 +1,11 @@
+# Introduction
 [![MIT Licensed](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/paaksing/django-cassiopeia/blob/master/LICENSE.txt)
 
-# Django Cassiopeia
-
-Django Cassiopeia has finished beta test, Django Cassiopeia 2 has **_backward incompatible changes_**, please check them out [here](https://paaksing.github.io/django-cassiopeia/documentation/migrating1to2.html).
+Django Cassiopeia has finished beta test, Django Cassiopeia 2 has **_backward incompatible changes_**, please check them out [here](./migrating1to2.html).
 
 An Integration of [Cassiopeia](https://github.com/meraki-analytics/cassiopeia) to the Django Framework (Compatible with DRF) with enhanced new features.
 
 Cassiopeia is a Python adaptation of the Riot Games League of Legends API (https://developer.riotgames.com/). For instance it is also the sister library to [Orianna](https://github.com/robrua/Orianna) (Java). It's been designed with usability in mind - making sure all the bookkeeping is done right so you can focus on getting the data you need and building your application.
-
-## Documentation
-Django Cassiopeia has detailed [documentation](https://paaksing.github.io/django-cassiopeia/).
-For functions and methods of Cassiopeia is found in this [documentation](http://cassiopeia.readthedocs.org/en/latest/).
 
 ## Installation and Requirements
 ```python
@@ -37,6 +32,7 @@ CASSIOPEIA_PIPELINE = {   # small pipeine to get started
     "RiotAPI": {},
 }
 ```
+
 In your `views.py` that you wish to use cassiopeia functions:
 ```python
 from django_cassiopeia import cassiopeia as cass
@@ -48,6 +44,7 @@ class SummonerView(View): # Django CBV with json response
         summoner = cass.Summoner(name="Kalturi")
         return JsonResponse({"name": summoner.name, "level": summoner.level})
 ```
+
 Reminder: it can be used anywhere as long as you do the correct import:
 ```python
 from django_cassiopeia import cassiopeia 
@@ -63,16 +60,3 @@ from django_cassiopeia import cassiopeia
 * **_Prevent infinite instances:_** Weird things will happen if you don't import correctly cassiopeia in your Django project (happens to Flask too), now you add to `INSTALLED_APPS` and import it from there, no more infinite intances crashing around.
 
 * **_Adapted settings syntax:_** Keep all settings in one place, the standard place -> `settings.py`, with adapted syntax that fits into the Django trend.
-
-## Questions/Contributions/Bugs
-* For Django Cassiopeia: Feel free to send pull requests or to contact us via this github or our general [discord](https://discord.gg/uYW7qhP). More information can be found in our [documentation](https://paaksing.github.io/django-cassiopeia/).
-* For Cassiopeia: feel free to send pull requests or to contact cassiopeia devs via [cassiopeia's github](https://github.com/meraki-analytics/cassiopeia) or the same discord server. More information about main cassiopeia is found in this [documentation](http://cassiopeia.readthedocs.org/en/latest/).
-
-## Supporting Cassiopeia and Django Cassiopeia
-* If you want to support this specific project (`django-cassiopeia`), consider supporting me through [Patreon](https://www.patreon.com/paaksing) too. 
-* If you've loved using Cassiopeia, consider supporting the former developers of the main framework through [PayPal](https://www.paypal.me/merakianalytics) or [Patreon](https://www.patreon.com/merakianalytics).
-
-## Disclaimer
-Django Cassiopeia existence is acknowleged by cassiopeia's former developers. Both package/framework/library is updated in parallel with some exceptions due to the fact of different use cases.
-
-Cassiopeia/Django-Cassiopeia isn't endorsed by Riot Games and doesn't reflect the views or opinions of Riot Games or anyone officially involved in producing or managing League of Legends. League of Legends and Riot Games are trademarks or registered trademarks of Riot Games, Inc. League of Legends © Riot Games, Inc.

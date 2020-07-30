@@ -58,7 +58,7 @@ default_expirations = {
 
 
 class DjangoCache(DataSource, DataSink):
-    def __init__(self, expirations: Mapping[type, float] = None, alias: str = None, logs_enabled: bool = True) -> None:
+    def __init__(self, expirations: Mapping[type, float] = None, alias: str = None, logs_enabled: bool = False, safe_check: bool = True) -> None:
         self._alias = alias
         self._cache = DjangoCacheBackend(alias, logs_enabled)
         self._expirations = dict(expirations) if expirations is not None else default_expirations
@@ -72,8 +72,8 @@ class DjangoCache(DataSource, DataSink):
                 key = new_key
             if value != -1 and isinstance(value, datetime.timedelta):
                 self._expirations[key] = value.total_seconds()
-            elif value == -1:
-                LOGGER.warn(f"[Traceback: django_cassiopeia > {self._alias}] WARNING: {key.__name__} has set with 'forever' caching, and a cache is meant to expire at some point.")
+            elif value == -1 and safe_check:
+                raise RuntimeError(f"Secure check is enabled: You are trying to set {key.__name__} expiration to 'forever'")
 
     @DataSource.dispatch
     def get(self, type: Type[T], query: Mapping[str, Any], context: PipelineContext = None) -> T:
