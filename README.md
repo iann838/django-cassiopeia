@@ -20,7 +20,7 @@ Python>=3.6
 pip install django-cassiopeia
 ```
 
-> #### v2.1
+> ### v2.1
 > Starting version 2.1, django-cassiopeia will no longer contain cassiopeia in its modules, instead it will wrap you original cassiopeia framework with the necessary changes in place. This makes easy to get ahead of fixes of the main library without the need of me doing pararel updates, when cassiopeia updates a new version, you can get going by only upgrading cassiopeia with `pip install cassiopeia --upgrade`.
 
 ## Quick Start
