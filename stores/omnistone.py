@@ -4,24 +4,24 @@ import datetime
 from datapipelines import DataSource, DataSink, PipelineContext, validate_query, NotFoundError
 from backends.omnistone_backend import OmnistoneBackend
 
-from . import uniquekeys
-from ..core.staticdata.champion import ChampionData, ChampionListData, Champion, Champions
-from ..core.staticdata.rune import RuneData, RuneListData, Rune, Runes
-from ..core.staticdata.item import ItemData, ItemListData, Item, Items
-from ..core.staticdata.summonerspell import SummonerSpellData, SummonerSpellListData, SummonerSpell, SummonerSpells
-from ..core.staticdata.map import MapData, MapListData, Map, Maps
-from ..core.staticdata.realm import RealmData, Realms
-from ..core.staticdata.profileicon import ProfileIconData, ProfileIconListData, ProfileIcon, ProfileIcons
-from ..core.staticdata.language import LanguagesData, Locales
-from ..core.staticdata.languagestrings import LanguageStringsData, LanguageStrings
-from ..core.staticdata.version import VersionListData, Versions
-from ..core.championmastery import ChampionMasteryData, ChampionMasteryListData, ChampionMastery, ChampionMasteries
-from ..core.league import MasterLeagueListData, GrandmasterLeagueListData, ChallengerLeagueListData, LeagueSummonerEntries, League, ChallengerLeague, GrandmasterLeague, MasterLeague, LeagueEntries
-from ..core.match import MatchData, TimelineData, Match, Timeline
-from ..core.summoner import SummonerData, Summoner
-from ..core.status import ShardStatusData, ShardStatus
-from ..core.spectator import CurrentGameInfoData, FeaturedGamesData, CurrentMatch, FeaturedMatches
-from ..core.champion import ChampionRotationData, ChampionRotation
+from cassiopeia.datastores import uniquekeys
+from cassiopeia.core.staticdata.champion import ChampionData, ChampionListData, Champion, Champions
+from cassiopeia.core.staticdata.rune import RuneData, RuneListData, Rune, Runes
+from cassiopeia.core.staticdata.item import ItemData, ItemListData, Item, Items
+from cassiopeia.core.staticdata.summonerspell import SummonerSpellData, SummonerSpellListData, SummonerSpell, SummonerSpells
+from cassiopeia.core.staticdata.map import MapData, MapListData, Map, Maps
+from cassiopeia.core.staticdata.realm import RealmData, Realms
+from cassiopeia.core.staticdata.profileicon import ProfileIconData, ProfileIconListData, ProfileIcon, ProfileIcons
+from cassiopeia.core.staticdata.language import LanguagesData, Locales
+from cassiopeia.core.staticdata.languagestrings import LanguageStringsData, LanguageStrings
+from cassiopeia.core.staticdata.version import VersionListData, Versions
+from cassiopeia.core.championmastery import ChampionMasteryData, ChampionMasteryListData, ChampionMastery, ChampionMasteries
+from cassiopeia.core.league import MasterLeagueListData, GrandmasterLeagueListData, ChallengerLeagueListData, LeagueSummonerEntries, League, ChallengerLeague, GrandmasterLeague, MasterLeague, LeagueEntries
+from cassiopeia.core.match import MatchData, TimelineData, Match, Timeline
+from cassiopeia.core.summoner import SummonerData, Summoner
+from cassiopeia.core.status import ShardStatusData, ShardStatus
+from cassiopeia.core.spectator import CurrentGameInfoData, FeaturedGamesData, CurrentMatch, FeaturedMatches
+from cassiopeia.core.champion import ChampionRotationData, ChampionRotation
 
 T = TypeVar("T")
 

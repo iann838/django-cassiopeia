@@ -5,19 +5,19 @@ import copy
 from datapipelines import DataSource, DataSink, PipelineContext, Query, validate_query, NotFoundError
 from backends.cache_backend import DjangoCacheBackend
 
-from ..data import Platform, Region, Queue
-from ..dto.common import DtoObject
-from ..dto.champion import ChampionRotationDto
-from ..dto.championmastery import ChampionMasteryDto, ChampionMasteryListDto
-from ..dto.league import MasterLeagueListDto, ChallengerLeagueListDto, GrandmasterLeagueListDto
-from ..dto.staticdata import ChampionDto, ChampionListDto, RuneDto, RuneListDto, ItemDto, ItemListDto, SummonerSpellDto, SummonerSpellListDto, MapDto, MapListDto, RealmDto, ProfileIconDataDto, ProfileIconDetailsDto, LanguagesDto, LanguageStringsDto, VersionListDto
-from ..dto.match import MatchDto, TimelineDto, MatchListDto
-from ..dto.summoner import SummonerDto
-from ..dto.status import ShardStatusDto
-from ..dto.spectator import CurrentGameInfoDto, FeaturedGamesDto
-from ..dto.patch import PatchListDto
-from ..datastores.uniquekeys import convert_region_to_platform
-from ..datastores.riotapi.common import _get_default_locale, _get_latest_version
+from cassiopeia.data import Platform, Region, Queue
+from cassiopeia.dto.common import DtoObject
+from cassiopeia.dto.champion import ChampionRotationDto
+from cassiopeia.dto.championmastery import ChampionMasteryDto, ChampionMasteryListDto
+from cassiopeia.dto.league import MasterLeagueListDto, ChallengerLeagueListDto, GrandmasterLeagueListDto
+from cassiopeia.dto.staticdata import ChampionDto, ChampionListDto, RuneDto, RuneListDto, ItemDto, ItemListDto, SummonerSpellDto, SummonerSpellListDto, MapDto, MapListDto, RealmDto, ProfileIconDataDto, ProfileIconDetailsDto, LanguagesDto, LanguageStringsDto, VersionListDto
+from cassiopeia.dto.match import MatchDto, TimelineDto, MatchListDto
+from cassiopeia.dto.summoner import SummonerDto
+from cassiopeia.dto.status import ShardStatusDto
+from cassiopeia.dto.spectator import CurrentGameInfoDto, FeaturedGamesDto
+from cassiopeia.dto.patch import PatchListDto
+from cassiopeia.datastores.uniquekeys import convert_region_to_platform
+from cassiopeia.datastores.riotapi.common import _get_default_locale, _get_latest_version
 from logging import getLogger
 
 LOGGER = getLogger(__name__)

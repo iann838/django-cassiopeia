@@ -15,6 +15,11 @@ Python>=3.6
 pip install django-cassiopeia
 ```
 
+::: warning v2.1
+Starting version 2.1, django-cassiopeia will no longer contain cassiopeia in its modules, instead it will wrap you original cassiopeia framework with the necessary changes in place. This makes easy to get ahead of fixes of the main library without the need of me doing pararel updates, when cassiopeia updates a new version, you can get going by only upgrading cassiopeia with `pip install cassiopeia --upgrade`.
+:::
+
+
 ## Quick Start
 
 In your `settings.py`:
@@ -60,3 +65,9 @@ from django_cassiopeia import cassiopeia
 * **_Prevent infinite instances:_** Weird things will happen if you don't import correctly cassiopeia in your Django project (happens to Flask too), now you add to `INSTALLED_APPS` and import it from there, no more infinite intances crashing around.
 
 * **_Adapted settings syntax:_** Keep all settings in one place, the standard place -> `settings.py`, with adapted syntax that fits into the Django trend.
+
+## High Concurrency and AsyncIO
+
+Currently Cassiopeia is 98% thread safe with some exception on the patch number files that complains about a generator in extreme cases. So you can feel 98% safe to multithread Cassiopeia in your environments.
+
+If you need higher concurrency and wants to work with AsyncIO then consider using my AsyncIO based framework [Pyot](https://github.com/paaksing/Pyot). It works like magic, benchmarks of 60 to 90 calls per second on a CPU optimized machine at extreme cases. It has extremely similar syntax to Cassiopeia, supports Django out of the box, wide range of Caches (Django, Redis, Disk, MongoDB), access to CDragon and MerakiCDN.

@@ -75,3 +75,6 @@ target/
 
 # vscode
 .vscode/
+
+django-cassiopeia-venv
+filebased-cache

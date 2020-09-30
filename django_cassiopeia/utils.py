@@ -1,7 +1,12 @@
 from typing import TypeVar, Type, Dict, Union, List, Mapping
-from django.conf import settings
-import copy
 from logging import getLogger
+import importlib
+import copy
+
+from django.conf import settings
+import datapipelines
+import cassiopeia
+
 LOGGER = getLogger(__name__)
 
 expire_index = {
@@ -204,5 +209,69 @@ def cassiopeia_init():
         "plugins": getattr(settings, "CASSIOPEIA_PLUGINS", {})
     }
     return cassiopeia_settings
-    
-    
+
+
+def create_pipeline(service_configs: Dict, verbose: int = 0) -> datapipelines.DataPipeline:
+    transformers = []
+
+    # Always use the Riot API transformers
+    from cassiopeia.transformers import __transformers__ as riotapi_transformer
+    transformers.extend(riotapi_transformer)
+
+    # Add sources / sinks by name from config
+    services = []
+    for store_name, config in service_configs.items():
+        try:
+            package = config.pop("package", "cassiopeia.datastores")
+        except TypeError:
+            package = "cassiopeia.datastores"
+        module = importlib.import_module(name=package)
+        store_cls = getattr(module, store_name)
+        if store_name.lower() == "djangocache":
+            for cache_config in config:
+                services.append(store_cls(**cache_config))
+        else:
+            store = store_cls(**config)
+            services.append(store)
+            service_transformers = getattr(module, "__transformers__", [])
+            transformers.extend(service_transformers)
+
+    from cassiopeia.datastores import Cache, Omnistone, MerakiAnalyticsCDN, LolWikia
+
+    # Automatically insert the ghost store if it isn't there
+    from cassiopeia.datastores import UnloadedGhostStore
+    found = False
+    for datastore in services:
+        if isinstance(datastore, UnloadedGhostStore):
+            found = True
+            break
+    if not found:
+        # Find the cache and insert the ghost store directly after it
+        # OR Insert the ghost store at the beginning of the pipeline
+        j = 0
+        for i, datastore in enumerate(services):
+            if isinstance(datastore, Cache) or isinstance(datastore, Omnistone):
+                j = i+1 if i+1 > j else j
+        services.insert(j, UnloadedGhostStore())
+
+    services.append(MerakiAnalyticsCDN())
+    services.append(LolWikia())
+    pipeline = datapipelines.DataPipeline(services, transformers)
+
+    if verbose > 0:
+        for service in services:
+            print("Service:", service)
+            if verbose > 1:
+                if isinstance(service, DataSource):
+                    for p in service.provides:
+                        print("  Provides:", p)
+                if isinstance(service, DataSink):
+                    for p in service.accepts:
+                        print("  Accepts:", p)
+        if verbose > 2:
+            for transformer in transformers:
+                for t in transformer.transforms.items():
+                    print("Transformer:", t)
+            print()
+
+    return pipeline

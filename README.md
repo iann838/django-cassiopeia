@@ -20,6 +20,9 @@ Python>=3.6
 pip install django-cassiopeia
 ```
 
+> #### v2.1
+> Starting version 2.1, django-cassiopeia will no longer contain cassiopeia in its modules, instead it will wrap you original cassiopeia framework with the necessary changes in place. This makes easy to get ahead of fixes of the main library without the need of me doing pararel updates, when cassiopeia updates a new version, you can get going by only upgrading cassiopeia with `pip install cassiopeia --upgrade`.
+
 ## Quick Start
 
 In your `settings.py`:
@@ -64,13 +67,15 @@ from django_cassiopeia import cassiopeia
 
 * **_Adapted settings syntax:_** Keep all settings in one place, the standard place -> `settings.py`, with adapted syntax that fits into the Django trend.
 
+## High Concurrency and AsyncIO
+
+Currently Cassiopeia is 98% thread safe with some exception on the patch number files that complains about a generator in extreme cases. So you can feel 98% safe to multithread Cassiopeia in your environments.
+
+If you need higher concurrency and wants to work with AsyncIO then consider using my AsyncIO based framework [Pyot](https://github.com/paaksing/Pyot). It works like magic, benchmarks of 60 to 90 calls per second on a CPU optimized machine at extreme cases. It has extremely similar syntax to Cassiopeia, supports Django out of the box, wide range of Caches (Django, Redis, Disk, MongoDB), access to CDragon and MerakiCDN.
+
 ## Questions/Contributions/Bugs
 * For Django Cassiopeia: Feel free to send pull requests or to contact us via this github or our general [discord](https://discord.gg/uYW7qhP). More information can be found in our [documentation](https://paaksing.github.io/django-cassiopeia/).
 * For Cassiopeia: feel free to send pull requests or to contact cassiopeia devs via [cassiopeia's github](https://github.com/meraki-analytics/cassiopeia) or the same discord server. More information about main cassiopeia is found in this [documentation](http://cassiopeia.readthedocs.org/en/latest/).
-
-## Supporting Cassiopeia and Django Cassiopeia
-* If you want to support this specific project (`django-cassiopeia`), consider supporting me through [Patreon](https://www.patreon.com/paaksing) too. 
-* If you've loved using Cassiopeia, consider supporting the former developers of the main framework through [PayPal](https://www.paypal.me/merakianalytics) or [Patreon](https://www.patreon.com/merakianalytics).
 
 ## Disclaimer
 Django Cassiopeia existence is acknowleged by cassiopeia's former developers. Both package/framework/library is updated in parallel with some exceptions due to the fact of different use cases.
