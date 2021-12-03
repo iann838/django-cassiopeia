@@ -5,7 +5,7 @@ import copy
 from datapipelines import DataSource, DataSink, PipelineContext, Query, validate_query, NotFoundError
 from backends.cache_backend import DjangoCacheBackend
 
-from cassiopeia.data import Platform, Region, Queue
+from cassiopeia.data import Platform, Region, Queue, Continent
 from cassiopeia.dto.common import DtoObject
 from cassiopeia.dto.champion import ChampionRotationDto
 from cassiopeia.dto.championmastery import ChampionMasteryDto, ChampionMasteryListDto
@@ -266,23 +266,23 @@ class DjangoCache(DataSource, DataSink):
     # Match
 
     _validate_get_match_query = Query. \
-        has("id").as_(int).also. \
-        has("platform").as_(Platform)
+        has("id").as_(str).also. \
+        has("continent").as_(Continent)
 
     @get.register(MatchDto)
     @validate_query(_validate_get_match_query, convert_region_to_platform)
     def get_match(self, query: MutableMapping[str, Any], context: PipelineContext = None) -> MatchDto:
         key = "{clsname}.{platform}.{id}".format(clsname=MatchDto.__name__,
-                                                 platform=query["platform"].value,
+                                                 platform=query["continent"].value,
                                                  id=query["id"])
         return MatchDto(self._get(key))
 
     @put.register(MatchDto)
     def put_match(self, item: MatchDto, context: PipelineContext = None) -> None:
-        platform = Region(item["region"]).platform.value
+        platform = Continent(item["continent"]).value
         key = "{clsname}.{platform}.{id}".format(clsname=MatchDto.__name__,
                                                  platform=platform,
-                                                 id=item["gameId"])
+                                                 id=item["matchId"])
         self._put(key, item)
 
     # Match list
