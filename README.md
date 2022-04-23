@@ -1,8 +1,15 @@
 [![MIT Licensed](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/paaksing/django-cassiopeia/blob/master/LICENSE.txt)
 
-# Django Cassiopeia
+# Issues with Match V5
 
-Django Cassiopeia has finished beta test, Django Cassiopeia 2 has **_backward incompatible changes_**, please check them out [here](https://paaksing.github.io/django-cassiopeia/documentation/migrating1to2.html).
+There is no default settings for the "REGION" variable for MATCH-V5 endpoints, to correctly use MATCH-V5 please submit the REGION of the match when instantiating the match object.
+
+Why is this not FIXED ???
+- Life has been busy.
+- Cassiopeia itself is not well maintained and contains bugs and unresolved issues. 
+- What about a contribution by whoever is interested in using this ?
+
+# Django Cassiopeia
 
 An Integration of [Cassiopeia](https://github.com/meraki-analytics/cassiopeia) to the Django Framework (Compatible with DRF) with enhanced new features.
 
@@ -69,7 +76,7 @@ from django_cassiopeia import cassiopeia
 
 ## High Concurrency and AsyncIO
 
-Currently Cassiopeia is 98% thread safe with some exception on the patch number files that complains about a generator in extreme cases. So you can feel 98% safe to multithread Cassiopeia in your environments.
+Currently Cassiopeia is _almost but not entirely_ thread safe with some exception on the patch number files that complains about a generator in extreme cases. So you can feel 98% safe to multithread Cassiopeia in your environments.
 
 If you need higher concurrency and wants to work with AsyncIO then consider using my AsyncIO based framework [Pyot](https://github.com/paaksing/Pyot). It works like magic, benchmarks of 60 to 90 calls per second on a CPU optimized machine at extreme cases. It has extremely similar syntax to Cassiopeia, supports Django out of the box, wide range of Caches (Django, Redis, Disk, MongoDB), access to CDragon and MerakiCDN.
 
@@ -78,6 +85,5 @@ If you need higher concurrency and wants to work with AsyncIO then consider usin
 * For Cassiopeia: feel free to send pull requests or to contact cassiopeia devs via [cassiopeia's github](https://github.com/meraki-analytics/cassiopeia) or the same discord server. More information about main cassiopeia is found in this [documentation](http://cassiopeia.readthedocs.org/en/latest/).
 
 ## Disclaimer
-Django Cassiopeia existence is acknowleged by cassiopeia's former developers. Both package/framework/library is updated in parallel with some exceptions due to the fact of different use cases.
 
 Cassiopeia/Django-Cassiopeia isn't endorsed by Riot Games and doesn't reflect the views or opinions of Riot Games or anyone officially involved in producing or managing League of Legends. League of Legends and Riot Games are trademarks or registered trademarks of Riot Games, Inc. League of Legends © Riot Games, Inc.
