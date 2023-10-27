@@ -1,14 +1,5 @@
 [![MIT Licensed](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/paaksing/django-cassiopeia/blob/master/LICENSE.txt)
 
-# Issues with Match V5
-
-There is no default settings for the "REGION" variable for MATCH-V5 endpoints, to correctly use MATCH-V5 please submit the REGION of the match when instantiating the match object.
-
-Why is this not FIXED ???
-- Life has been busy.
-- Cassiopeia itself is not well maintained and contains bugs and unresolved issues. 
-- What about a contribution by whoever is interested in using this ?
-
 # Django Cassiopeia
 
 An Integration of [Cassiopeia](https://github.com/meraki-analytics/cassiopeia) to the Django Framework (Compatible with DRF) with enhanced new features.
