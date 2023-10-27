@@ -1,5 +1,9 @@
 [![MIT Licensed](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/paaksing/django-cassiopeia/blob/master/LICENSE.txt)
 
+# Important notice
+
+This repository has been archived and will no longer be maintained as Django itself has long drifted from the interests of the maintainer, if you wish to continue to use this code, please fork and maintain it yourselves.
+
 # Django Cassiopeia
 
 An Integration of [Cassiopeia](https://github.com/meraki-analytics/cassiopeia) to the Django Framework (Compatible with DRF) with enhanced new features.
